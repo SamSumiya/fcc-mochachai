@@ -4,15 +4,20 @@ const assert = chai.assert;
 suite('Unit Tests', function () {
   suite('Basic Assertions', function () {
     // #1
-    test('#isNull, #isNotNull', function () {
-      assert.fail(null, 'This is an optional error description - e.g. null is null');
-      assert.fail(1, '1 is not null');
+    test('#isNull', function () {
+      const isNull = null
+      const notNull = 2 
+      assert.isNull(isNull, 'This is an optional error description - e.g. null is null');
+      assert.isNotNull(notNull, '1 is not null');
     });
     // #2
     test('#isDefined, #isUndefined', function () {
-      assert.fail(null, 'null is not undefined');
-      assert.fail(undefined, 'undefined IS undefined');
-      assert.fail('hello', 'A string is not undefined');
+      const nullValue = null
+      const undefinedValue = undefined
+      const hello = 'hello'
+      assert.isNull(nullValue, 'null is not undefined');
+      assert.isUndefined(undefinedValue, 'undefined IS undefined');
+      assert.isDefined(hello, 'A string is not undefined');
     });
     // #3
     test('#isOk, #isNotOk', function () {
