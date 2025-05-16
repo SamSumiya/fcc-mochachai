@@ -40,11 +40,11 @@ suite('Functional Tests', function () {
         .request(server)
         .keepOpen()
         .put('/travellers')
-        .send({surname: "Colombo"})
+        .send({surname: "Colombo", name: "Cristoforo"})
         .end(function (err, res) {
           assert.strictEqual(res.status, 200);
           assert.strictEqual(res.type, 'application/json');
-           assert.strictEqual(res.body.name, 'Cristoforo'); 
+          assert.strictEqual(res.body.name, 'Cristoforo'); 
           assert.strictEqual(res.body.surname, 'Colombo');
           done();
         });
