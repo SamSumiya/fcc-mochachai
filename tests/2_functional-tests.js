@@ -4,6 +4,7 @@ const assert = chai.assert;
 const server = require('../server');
 
 const chaiHttp = require('chai-http');
+
 chai.use(chaiHttp);
 
 suite('Functional Tests', function () {
@@ -16,10 +17,10 @@ suite('Functional Tests', function () {
         .keepOpen()
         .get('/hello')
         .end(function (err, res) {
-          assert.fail(res.status, 200);
-          assert.fail(res.text, 'hello Guest');
+          assert.strictEqual(res.status, 200);
+          assert.strictEqual(res.text, 'hello Guest');
           done();
-        });
+        })
     });
     // #2
     test('Test GET /hello with your name', function (done) {
@@ -28,8 +29,8 @@ suite('Functional Tests', function () {
         .keepOpen()
         .get('/hello?name=xy_z')
         .end(function (err, res) {
-          assert.fail(res.status, 200);
-          assert.fail(res.text, 'hello xy_z');
+          assert.strictEqual(res.status, 200);
+          assert.strictEqual(res.text, 'hello xy_z');
           done();
         });
     });
@@ -39,28 +40,43 @@ suite('Functional Tests', function () {
         .request(server)
         .keepOpen()
         .put('/travellers')
-
+        .send({surname: "Colombo"})
         .end(function (err, res) {
-          assert.fail();
-
+          assert.strictEqual(res.status, 200);
+          assert.strictEqual(res.body.surname, 'Colombo');
           done();
         });
     });
     // #4
     test('Send {surname: "da Verrazzano"}', function (done) {
-      assert.fail();
-
-      done();
+      chai
+        .request(server)
+        .keepOpen()
+        .put('/travellers')
+        .send({surname: "da Verrazzano"})
+        .end(function(err, res) {
+          assert.strictEqual(res.status, 200);
+          assert.strictEqual(res.body.surname, 'da Verrazzano');
+          done();
+        })
     });
   });
 });
 
 const Browser = require('zombie');
+// Browser.site = 'http://localhost:3000'; 
+// Browser.localhost('localhost', 3000, server);  
+
+// Get the port your server is configured to use
+const port = process.env.PORT || 3000;
+Browser.localhost('localhost', port, server);
+Browser.site = `http://localhost:${port}`;  
+
 
 suite('Functional Tests with Zombie.js', function () {
   this.timeout(5000);
 
-
+  const browser = new Browser();
 
   suite('Headless browser', function () {
     test('should have a working "site" property', function() {
@@ -70,16 +86,39 @@ suite('Functional Tests with Zombie.js', function () {
 
   suite('"Famous Italian Explorers" form', function () {
     // #5
-    test('Submit the surname "Colombo" in the HTML form', function (done) {
-      assert.fail();
-
-      done();
+    
+  test('Submit the surname "Colombo" in the HTML form', function (done) {
+   
+    browser.visit('/', function () {
+      console.log("--- Page visited. HTML loaded by Zombie.js (Colombo test) ---");
+      console.log(browser.html()); // <--- Add this line
+      console.log("----------------------------------------------");
+      browser
+        .fill('surname', 'Colombo') // Fill with 'Colombo'
+        .pressButton('submit', function () {
+          browser.assert.success();
+          // Assert the full name is displayed in the #name span
+          browser.assert.text('span#name', 'Cristoforo Colombo');
+          // Assert the dates span exists
+          browser.assert.elements('span#dates', 1);
+          done();
+        });
     });
+  });
     // #6
     test('Submit the surname "Vespucci" in the HTML form', function (done) {
-      assert.fail();
-
-      done();
-    });
+  browser.visit('/', function () {
+    browser
+      .fill('surname', 'Vespucci') // Fill with 'Vespucci'
+      .pressButton('submit', function () {
+        browser.assert.success();
+        // Assert the full name is displayed in the #name span
+        browser.assert.text('span#name', 'Amerigo Vespucci');
+        // Assert the dates span exists
+        browser.assert.elements('span#dates', 1);
+        done();
+      });
+  });
+});
   });
 });
