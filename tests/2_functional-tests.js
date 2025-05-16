@@ -56,10 +56,10 @@ suite('Functional Tests', function () {
         .put('/travellers')
         .send({surname: "da Verrazzano"})
         .end(function(err, res) {
-          assert.strictEqual(res.status, 200);
-          assert.strictEqual(res.type, 'application/json');
-          assert.strictEqual(res.body.name, 'Giovanni');
-          assert.strictEqual(res.body.surname, 'da Verrazzano');
+          assert.equal(res.status, 200);
+          assert.equal(res.type, 'application/json');
+          assert.equal(res.body.name, 'Giovanni');
+          assert.equal(res.body.surname, 'da Verrazzano');
           done();
         })
     });
