@@ -58,8 +58,8 @@ suite('Functional Tests', function () {
         .end(function(err, res) {
           assert.strictEqual(res.status, 200);
           assert.strictEqual(res.type, 'application/json');
-          assert.strictEqual(res.body.surname, 'da Verrazzano');
           assert.strictEqual(res.body.name, 'Giovanni');
+          assert.strictEqual(res.body.surname, 'da Verrazzano');
           done();
         })
     });
