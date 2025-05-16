@@ -58,7 +58,9 @@ suite('Functional Tests', function () {
         .send({surname: "da Verrazzano"})
         .end(function(err, res) {
           assert.strictEqual(res.status, 200);
+          assert.equal(res.type, 'application/json');
           assert.strictEqual(res.body.surname, 'da Verrazzano');
+           assert.equal(res.body.surname, 'Amerigo');
           done();
         })
     });
