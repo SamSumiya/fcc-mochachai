@@ -90,7 +90,7 @@ const travellers = function (req, res) {
 // };
 
 app.route('/travellers')
-  .post(travellers) 
+  // .post(travellers) 
   .put(travellers);
 
 let error;

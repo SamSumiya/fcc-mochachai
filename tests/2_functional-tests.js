@@ -40,7 +40,7 @@ suite('Functional Tests', function () {
         .request(server)
         .keepOpen()
         .put('/travellers')
-        .send({surname: "Colombo", name: "Cristoforo"})
+        .send({"name": "Cristoforo"})
         .end(function (err, res) {
           assert.strictEqual(res.status, 200);
           assert.strictEqual(res.type, 'application/json');
