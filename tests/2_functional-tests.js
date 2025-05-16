@@ -42,10 +42,10 @@ suite('Functional Tests', function () {
         .put('/travellers')
         .send({surname: "Colombo" })
         .end(function (err, res) {
-          assert.strictEqual(res.status, 200);
-          assert.strictEqual(res.type, 'application/json');
-          assert.strictEqual(res.body.name, 'Cristoforo'); 
-          assert.strictEqual(res.body.surname, 'Colombo');
+          assert.equal(res.status, 200);
+          assert.equal(res.type, 'application/json');
+          assert.equal(res.body.name, 'Cristoforo'); 
+          assert.equal(res.body.surname, 'Colombo');
           done();
         });
     });
