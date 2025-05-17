@@ -9,6 +9,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true })); 
 app.use(bodyParser.json());
 
+console.log('✅ server.js loaded');
 
 app.get('/', function (req, res) {
   res.sendFile(__dirname + '/views/index.html');
@@ -21,76 +22,76 @@ app.get('/hello', function (req, res) {
   res.type('txt').send('hello ' + name);
 })
 
-const travellers = function (req, res) {
-  let data = {};
-  if (req.body && req.body.surname) {
-    switch (req.body.surname.toLowerCase()) {
-      case 'polo':
-        data = {
-          name: 'Marco',
-          surname: 'Polo',
-          dates: '1254 - 1324'
-        };
-        break;
-      case 'colombo':
-        data = {
-          name: 'Cristoforo',
-          surname: 'Colombo',
-          dates: '1451 - 1506'
-        };
-        break;
-      case 'vespucci':
-        data = {
-          name: 'Amerigo',
-          surname: 'Vespucci',
-          dates: '1454 - 1512'
-        };
-        break;
-      case 'da verrazzano':
-      case 'verrazzano':
-        data = {
-          name: 'Giovanni',
-          surname: 'da Verrazzano',
-          dates: '1485 - 1528'
-        };
-        break;
-      default:
-        data = {
-          name: 'unknown'
-        }
-    }
-  }
-  res.json(data);
-};
-
-// const travellers = (req, res) => {
-//   let data = { name: 'unknown', surname: '', dates: '' };
-
+// const travellers = function (req, res) {
+//   let data = {};
 //   if (req.body && req.body.surname) {
 //     switch (req.body.surname.toLowerCase()) {
-//       case 'polo':         data = { name: 'Marco',      surname: 'Polo',         dates: '1254 - 1324' }; break;
-//       case 'colombo':      data = { name: 'Cristoforo', surname: 'Colombo',      dates: '1451 - 1506' }; break;
-//       case 'vespucci':     data = { name: 'Amerigo',    surname: 'Vespucci',     dates: '1454 - 1512' }; break;
+//       case 'polo':
+//         data = {
+//           name: 'Marco',
+//           surname: 'Polo',
+//           dates: '1254 - 1324'
+//         };
+//         break;
+//       case 'colombo':
+//         data = {
+//           name: 'Cristoforo',
+//           surname: 'Colombo',
+//           dates: '1451 - 1506'
+//         };
+//         break;
+//       case 'vespucci':
+//         data = {
+//           name: 'Amerigo',
+//           surname: 'Vespucci',
+//           dates: '1454 - 1512'
+//         };
+//         break;
 //       case 'da verrazzano':
-//       case 'verrazzano':   data = { name: 'Giovanni',   surname: 'da Verrazzano', dates: '1485 - 1528' }; break;
+//       case 'verrazzano':
+//         data = {
+//           name: 'Giovanni',
+//           surname: 'da Verrazzano',
+//           dates: '1485 - 1528'
+//         };
+//         break;
+//       default:
+//         data = {
+//           name: 'unknown'
+//         }
 //     }
 //   }
-
-//   // If the form posted, send HTML Zombie can assert on.
-//   if (req.method === 'POST') {
-//     return res.send(`
-//       <p>first name:<span id="name">${data.name}</span></p>
-//       <p>last name:<span id="surname">${data.surname}</span></p>
-//       <p>dates:<span id="dates">${data.dates}</span></p>
-//     `);
-//   }
-
-//   // Otherwise (PUT), keep returning JSON for the chai-http tests.
 //   res.json(data);
 // };
 
+const travellers = (req, res) => {
+  let data = { name: 'unknown', surname: '', dates: '' };
+
+  if (req.body && req.body.surname) {
+    switch (req.body.surname.toLowerCase()) {
+      case 'polo':         data = { name: 'Marco',      surname: 'Polo',         dates: '1254 - 1324' }; break;
+      case 'colombo':      data = { name: 'Cristoforo', surname: 'Colombo',      dates: '1451 - 1506' }; break;
+      case 'vespucci':     data = { name: 'Amerigo',    surname: 'Vespucci',     dates: '1454 - 1512' }; break;
+      case 'da verrazzano':
+      case 'verrazzano':   data = { name: 'Giovanni',   surname: 'da Verrazzano', dates: '1485 - 1528' }; break;
+    }
+  }
+
+  // If the form posted, send HTML Zombie can assert on.
+  if (req.method === 'POST') {
+    return res.send(`
+      <p>first name:<span id="name">${data.name}</span></p>
+      <p>last name:<span id="surname">${data.surname}</span></p>
+      <p>dates:<span id="dates">${data.dates}</span></p>
+    `);
+  }
+
+  // Otherwise (PUT), keep returning JSON for the chai-http tests.
+  res.json(data);
+};
+
 app.route('/travellers')
-  // .post(travellers) 
+  .post(travellers) 
   .put(travellers);
 
 let error;
@@ -110,7 +111,7 @@ app.get('/_api/get-tests', cors(), function (req, res, next) {
   });
 
 
-// const port = process.env.PORT || 3000;
+
 // app.listen(port, function () {
 //   console.log("Listening on port " + port);
 //   console.log('Running Tests...');
@@ -127,12 +128,13 @@ app.get('/_api/get-tests', cors(), function (req, res, next) {
 
 
 
-module.exports = app; // for testing
+
 
 
 if (require.main === module) {
   const port = process.env.PORT || 3000;
-  app.listen(port, function () {
+  console.log('🚀 app.listen() called');
+  app.listen(port,  () => {
     console.log("Listening on port " + port);
     console.log('Running Tests...');
     setTimeout(function () {
@@ -146,6 +148,9 @@ if (require.main === module) {
     }, 1500);
   });
 }
+console.log('🤖 server.js loaded');
+module.exports = app; // for testing
+
 function testFilter(tests, type, n) {
   let out;
   switch (type) {

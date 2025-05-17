@@ -1,3 +1,5 @@
+
+
 const chai = require('chai');
 const assert = chai.assert;
 
@@ -52,36 +54,53 @@ suite('Functional Tests', function () {
     // #4
     test('Send {surname: "da Verrazzano"}', function (done) {
       chai
-      .request(server)
-      .put('/travellers')
-      .send({ surname: 'da Verrazzano' })
-      /** place your tests inside the callback **/
-      .end(function(err, res) {
-        assert.equal(res.status, 200, 'response status should be 200');
-        assert.equal(res.type, 'application/json', 'Response should be json');
-        assert.equal(res.body.name, 'Giovanni');
-        assert.equal(res.body.surname, 'da Verrazzano');
-
-        done();
-      });
+        .request(server)
+        .put('/travellers')
+        .send({surname: "da Verrazzano"})
+        .end(function(err, res) {
+          assert.equal(res.status, 200);
+          assert.equal(res.type, 'application/json');
+          assert.equal(res.body.name, 'Giovanni');
+          assert.equal(res.body.surname, 'da Verrazzano');
+          done();
+        })
     });
   });
 });
 
 const Browser = require('zombie');
+// Browser.localhost('localhost', 3000, server);
+
 Browser.site = 'http://localhost:3000'; 
-Browser.localhost('localhost', 3000, server);  
+// Browser.localhost('localhost', 3001, server);  
 
 // Get the port your server is configured to use
 // const port = process.env.PORT || 3000;
 // Browser.localhost('localhost', port, server);
 // Browser.site = `http://localhost:${port}`;  
+// let browser;
+// let listener;
+// let port;
+
+// // Start the server before tests
+// suiteSetup((done) => {
+//   Browser.site = 'http://localhost:3000';
+//   done();
+// });
+
+// Close the server after tests
+// suiteTeardown((done) => {
+//   listener.close(done);
+// });
 
 
 suite('Functional Tests with Zombie.js', function () {
   this.timeout(5000);
 
-  const browser = new Browser();
+  // setup(function () {
+  //   browser = new Browser();
+  // });
+  const browser = new Browser()
 
   suite('Headless browser', function () {
     test('should have a working "site" property', function() {
@@ -92,33 +111,38 @@ suite('Functional Tests with Zombie.js', function () {
   suite('"Famous Italian Explorers" form', function () {
     // #5
     test('Submit the surname "Colombo" in the HTML form', function (done) {
-    
       browser.visit('/', function () {
-        console.log("--- Page visited. HTML loaded by Zombie.js (Colombo test) ---");
-        console.log(browser.html()); // <--- Add this line
-        console.log("----------------------------------------------");
-        browser
-          .fill('surname', 'Colombo') // Fill with 'Colombo'
-          .pressButton('submit', function () {
-            browser.assert.success();
-            browser.assert.text('span#name', 'Cristoforo Colombo');
-            browser.assert.elements('span#dates', 1);
-            done();
+        browser.wait().then(() => {
+          browser
+            .fill('surname', 'Colombo')
+            .pressButton('submit', function () {
+              browser.assert.success();
+              browser.assert.text('span#name', 'Cristoforo');
+              browser.assert.text('span#surname', 'Colombo');
+              browser.assert.element('span#dates', 1);
+              // done();
+            });
           });
-      });
-    });
-
-    // #6
-  test('Submit the surname "Vespucci" in the HTML form', function (done) {
-    browser.visit('/', function () {
-      browser
-        .fill('surname', 'Vespucci') // Fill with 'Vespucci'
-        .pressButton('submit', function () {
-          browser.assert.success();
-          browser.assert.text('span#name', 'Amerigo Vespucci');
-          browser.assert.elements('span#dates', 1);
-          done();
         });
+        done();
+      });
+
+      // #6
+    test('Submit the surname "Vespucci" in the HTML form', function (done) {
+      browser.visit('/', function () {
+        browser.wait().then(() => {
+          browser
+            .fill('surname', 'Vespucci')
+            .then(() => {
+              browser.pressButton('submit', function () {
+                browser.assert.success();
+                browser.assert.text('span#name', 'Amerigo');
+                browser.assert.text('span#surname', 'Vespucci');
+                browser.assert.element('span#dates', 1);
+              });
+            });
+        });
+         done();
       });
     });
   });

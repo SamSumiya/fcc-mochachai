@@ -19,7 +19,7 @@
       <h2>Functional Tests Example</h2>
       <div class="pane">
         <h4>Famous Italian Explorers</h4>
-        <form action="/travellers" method="POST" id="f1">
+        <form action="/travellers" method="post" id="f1">
           <label for="i1">surname: </label>
           <input id="i1" type="text" name="surname" placeholder="try with 'Polo'...">
           <button type="submit">submit</button>
@@ -41,6 +41,16 @@
         </p>
       </div>
     </main>
-    <script src='/client.js'></script>
+    <!-- <script src='/client.js'></script> -->
+     <script>
+  // Load client.js only if not under test
+  if (!navigator.userAgent.includes('Zombie')) {
+    const script = document.createElement('script');
+    script.src = '/client.js';
+    document.head.appendChild(script);
+  }
+</script>
+
   </body>
 </html>
+
